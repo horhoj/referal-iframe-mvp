@@ -1,8 +1,11 @@
 import { Document, Page, Text, View, StyleSheet, Font, pdf, Image, Link, PDFViewer } from '@react-pdf/renderer';
+import { useState } from 'react';
+import { Simulate } from 'react-dom/test-utils';
 import { RFRFormValues } from '~/App/RFRTypes';
 import certTemplateImg from '~/assets/certTemplateImg.png';
 
 import circeRoundedRegular from '~/assets/fonts/CirceRounded-Regular.ttf';
+import error = Simulate.error;
 
 interface RFRPdfRenderProps {
   formValues: RFRFormValues;
@@ -17,41 +20,51 @@ Font.register({
 });
 
 export const RFRPdfRender = ({ formValues, phoneFormatted, onGoToBack }: RFRPdfRenderProps) => {
+  const [isLoding, setIsLoding] = useState(false);
   const acpCreateAndDownloadPDF = async () => {
-    const blob = await pdf(
-      <PDFLayout
-        name={formValues.name}
-        phoneFormatted={phoneFormatted}
-        phone={formValues.phone}
-        isLinkEnabled={true}
-      />,
-    ).toBlob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Сертификат Sirius Future.pdf`;
-    a.click();
+    try {
+      setIsLoding(true);
+      const blob = await pdf(
+        <PDFLayout
+          name={formValues.name}
+          phoneFormatted={phoneFormatted}
+          phone={formValues.phone}
+          isLinkEnabled={true}
+        />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Сертификат Sirius Future.pdf`;
+      a.click();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoding(false);
+    }
   };
 
   return (
     <div className="p-6 flex flex-col justify-center items-center">
-      <div className={'flex justify-center overflow-auto'}>
-        {/* <PDFViewer className="min-w-[300px] min-h-[213px] bg-[#FFFFFF] flex items-center" showToolbar={false}> */}
-        {/*  <PDFLayout */}
-        {/*    name={formValues.name} */}
-        {/*    phoneFormatted={phoneFormatted} */}
-        {/*    phone={formValues.phone} */}
-        {/*    isLinkEnabled={false} */}
-        {/*  /> */}
-        {/* </PDFViewer> */}
+      <div className={'relative overflow-auto w-full'}>
+        <img src={certTemplateImg} alt="" className="min-w-[400px] max-w-[400px]" />
+        <div className="absolute top-[35px] left-[16px] text-[7px]">
+          Вас пригласил(а) {formValues.name.toUpperCase()}
+        </div>
+        <div className="absolute top-[45px] left-[16px] text-[7px]">{phoneFormatted}</div>
       </div>
       <button
-        className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-3/4"
+        className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-full"
         onClick={acpCreateAndDownloadPDF}
+        disabled={isLoding}
       >
-        Скачать сертификат
+        {isLoding ? 'Создаем сертификат...' : 'Скачать сертификат'}
       </button>
-      <button className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-3/4" onClick={onGoToBack}>
+      <button
+        className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-full"
+        onClick={onGoToBack}
+        disabled={isLoding}
+      >
         Повторить ввод данных
       </button>
     </div>
