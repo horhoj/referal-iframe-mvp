@@ -36,14 +36,14 @@ export const RFRPdfRender = ({ formValues, phoneFormatted, onGoToBack }: RFRPdfR
   return (
     <div className="p-6 flex flex-col justify-center items-center">
       <div className={'flex justify-center overflow-auto'}>
-        <PDFViewer className="min-w-[300px] min-h-[213px] bg-[#FFFFFF] flex items-center" showToolbar={false}>
-          <PDFLayout
-            name={formValues.name}
-            phoneFormatted={phoneFormatted}
-            phone={formValues.phone}
-            isLinkEnabled={false}
-          />
-        </PDFViewer>
+        {/* <PDFViewer className="min-w-[300px] min-h-[213px] bg-[#FFFFFF] flex items-center" showToolbar={false}> */}
+        {/*  <PDFLayout */}
+        {/*    name={formValues.name} */}
+        {/*    phoneFormatted={phoneFormatted} */}
+        {/*    phone={formValues.phone} */}
+        {/*    isLinkEnabled={false} */}
+        {/*  /> */}
+        {/* </PDFViewer> */}
       </div>
       <button
         className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-3/4"
@@ -51,10 +51,7 @@ export const RFRPdfRender = ({ formValues, phoneFormatted, onGoToBack }: RFRPdfR
       >
         Скачать сертификат
       </button>
-      <button
-        className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-3/4"
-        onClick={onGoToBack}
-      >
+      <button className="bg-[#8e62e5] text-[#FFFFFF] mt-6 min-h-12 rounded-[100px] px-4 w-3/4" onClick={onGoToBack}>
         Повторить ввод данных
       </button>
     </div>
