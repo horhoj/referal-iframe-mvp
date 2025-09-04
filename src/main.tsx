@@ -3,8 +3,11 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import '~/styles/globalStyle.css';
 import { PersistGate } from 'redux-persist/lib/integration/react';
+import { Buffer } from 'buffer';
 import { persistor, store } from './store';
 import { App } from './App';
+
+window.Buffer = window.Buffer || Buffer;
 
 const container = document.getElementById('root');
 
